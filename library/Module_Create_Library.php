@@ -179,21 +179,13 @@ class Module_Create_Library
      */
     private static function touchCommon($kaifaName,$notes)
     {
-        // 获取版权声明信息
-        $version = self::$ModuleConfig['VersionDeclaration'];
-        // 获取时间
-        $time = date('Y/m/d H:i',time());
         // 处理文件内容
-        $str =  "<?php
-/**
- *  版权声明 :  {$version}
- *  文件名称 :  common.php
- *  创 建 者 :  {$kaifaName}
- *  创建日期 :  {$time}
- *  文件描述 :  {$notes}模块公共何函数文件
- *  历史记录 :  -----------------------
- */
-
+        $str = self::ZS(
+            'common.php',
+            $kaifaName,
+            $notes.'模块公共何函数文件'
+        );
+        $str .=  "
 // +----------------------------------
 // : 自定义函数区域
 // +----------------------------------
@@ -213,21 +205,13 @@ class Module_Create_Library
     {
         // 获取模块名称
         $ModuleName = ucwords($moduleName);
-        // 获取版权声明信息
-        $version = self::$ModuleConfig['VersionDeclaration'];
-        // 获取时间
-        $time = date('Y/m/d H:i',time());
         // 处理文件内容
-        $str =  "<?php
-/**
- *  版权声明 :  {$version}
- *  文件名称 :  {$ModuleName}Interface.php
- *  创 建 者 :  {$kaifaName}
- *  创建日期 :  {$time}
- *  文件描述 :  {$notes}_数据接口声明
- *  历史记录 :  -----------------------
- */
-namespace app\\{$moduleName}_module\\working_version\\v{$i}\\dao;
+        $str = self::ZS(
+            $ModuleName.'Interface.php',
+            $kaifaName,
+            $notes.'_数据接口声明'
+        );
+        $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\dao;
 
 interface {$ModuleName}Interface
 {
@@ -247,21 +231,13 @@ interface {$ModuleName}Interface
      */
     private static function touchConfig($kaifaName,$notes,$i)
     {
-        // 获取版权声明信息
-        $version = self::$ModuleConfig['VersionDeclaration'];
-        // 获取时间
-        $time = date('Y/m/d H:i',time());
         // 处理文件内容
-        $str =  "<?php
-/**
- *  版权声明 :  {$version}
- *  文件名称 :  v{$i}_config.php
- *  创 建 者 :  {$kaifaName}
- *  创建日期 :  {$time}
- *  文件描述 :  {$notes}_v{$i}_版本配置文件
- *  历史记录 :  -----------------------
- */
- 
+        $str = self::ZS(
+            "v{$i}_config.php",
+            $kaifaName,
+            "{$notes}_v{$i}_版本配置文件"
+        );
+        $str .=  "
 return [
     // 配置信息注释
     '配置信息下标' => '配置信息内容'
@@ -280,21 +256,13 @@ return [
      */
     private static function touchTableName($kaifaName,$notes,$i)
     {
-        // 获取版权声明信息
-        $version = self::$ModuleConfig['VersionDeclaration'];
-        // 获取时间
-        $time = date('Y/m/d H:i',time());
         // 处理文件内容
-        $str =  "<?php
-/**
- *  版权声明 :  {$version}
- *  文件名称 :  v{$i}_tableName.php
- *  创 建 者 :  {$kaifaName}
- *  创建日期 :  {$time}
- *  文件描述 :  {$notes}_v{$i}_版本数据表配置文件
- *  历史记录 :  -----------------------
- */
- 
+        $str = self::ZS(
+            "v{$i}_tableName.php",
+            $kaifaName,
+            "{$notes}_v{$i}_版本数据表配置文件"
+        );
+        $str .=  "
 return [
     // 数据表注释
     '数据表下标' => '数据表表名'
@@ -315,26 +283,18 @@ return [
      */
     private static function touchContent($moduleName,$kaifaName,$notes,$Arrays,$v,$i)
     {
-        // 获取版权声明信息
-        $version = self::$ModuleConfig['VersionDeclaration'];
         // 获取模块名称
         $ModuleName = ucwords($moduleName);
-        // 获取时间
-        $time = date('Y/m/d H:i',time());
         // 首字母大写
         $U = ucwords($v);
 
         // 处理文件内容
-        $str =  "<?php
-/**
- *  版权声明 :  {$version}
- *  文件名称 :  {$ModuleName}{$U}.php
- *  创 建 者 :  {$kaifaName}
- *  创建日期 :  {$time}
- *  文件描述 :  {$notes}{$Arrays[$v]}
- *  历史记录 :  -----------------------
- */
-namespace app\\{$moduleName}_module\\working_version\\v{$i}\\{$v};
+        $str = self::ZS(
+            "{$ModuleName}{$U}.php",
+            $kaifaName,
+            "{$notes}{$Arrays[$v]}"
+        );
+        $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\{$v};
 ";
         $str .= self::contentCont($moduleName,$i,$v);
 
@@ -497,4 +457,31 @@ class {$ModuleName}Model extends Model
         // 创建文件生成内容
         file_put_contents($touchName,$touchContents);
     }
+
+    /**
+     * 名 称 : ZS()
+     * 功 能 : 文件注释
+     * 创 建 : 2018/08/16 15:33
+     */
+    private static function ZS($touchName,$kaifaName,$notes)
+    {
+        // 获取版权声明信息
+        $version = self::$ModuleConfig['VersionDeclaration'];
+
+        // 获取时间
+        $time = date('Y/m/d H:i',time());
+
+        return "<?php
+/**
+*  版权声明 :  {$version}
+*  文件名称 :  {$touchName}
+*  创 建 者 :  {$kaifaName}
+*  创建日期 :  {$time}
+*  文件描述 :  {$notes}
+*  历史记录 :  -----------------------
+*/
+";
+
+    }
+
 }
