@@ -144,28 +144,28 @@ class Module_Create_Library
                     ucwords($moduleName).ucwords($v).'.php',
                     self::touchContent($moduleName,$kaifaName,$notes,$Arrays,$v,$i)
                 );
-                // 创建版本运行内容
-                self::createTouch(
-                    $working_version.'/v'.$i.'/'.$v.'/'.
-                    ucwords($moduleName).'Interface.php',
-                    self::createInterface($moduleName,$kaifaName,$notes,$i)
-                );
-                // 创建版本运行配置文件
-                self::createTouch(
-                    $config_dir.'/v'.$i.'_config.php',
-                    self::touchConfig($kaifaName,$notes,$i)
-                );
-                // 创建版本运行配置文件
-                self::createTouch(
-                    $config_dir.'/v'.$i.'_tableName.php',
-                    self::touchTableName($kaifaName,$notes,$i)
-                );
-                // 创建模块公共函数文件
-                self::createTouch(
-                    './'.$moduleName.'_module/common.php',
-                    self::touchCommon($kaifaName,$notes)
-                );
             }
+            // 创建版本运行内容
+            self::createTouch(
+                $working_version.'/v'.$i.'/dao/'.
+                ucwords($moduleName).'Interface.php',
+                self::createInterface($moduleName,$kaifaName,$notes,$i)
+            );
+            // 创建版本运行配置文件
+            self::createTouch(
+                $config_dir.'/v'.$i.'_config.php',
+                self::touchConfig($kaifaName,$notes,$i)
+            );
+            // 创建版本运行配置文件
+            self::createTouch(
+                $config_dir.'/v'.$i.'_tableName.php',
+                self::touchTableName($kaifaName,$notes,$i)
+            );
+            // 创建模块公共函数文件
+            self::createTouch(
+                './'.$moduleName.'_module/common.php',
+                self::touchCommon($kaifaName,$notes)
+            );
         }
     }
 
