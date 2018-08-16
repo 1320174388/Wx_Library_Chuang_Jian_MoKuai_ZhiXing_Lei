@@ -473,13 +473,13 @@ class {$ModuleName}Model extends Model
 
         return "<?php
 /**
-*  版权声明 :  {$version}
-*  文件名称 :  {$touchName}
-*  创 建 者 :  {$kaifaName}
-*  创建日期 :  {$time}
-*  文件描述 :  {$notes}
-*  历史记录 :  -----------------------
-*/
+ *  版权声明 :  {$version}
+ *  文件名称 :  {$touchName}
+ *  创 建 者 :  {$kaifaName}
+ *  创建日期 :  {$time}
+ *  文件描述 :  {$notes}
+ *  历史记录 :  -----------------------
+ */
 ";
 
     }
