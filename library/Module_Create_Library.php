@@ -113,13 +113,14 @@ class Module_Create_Library
         );
 
         // 处理版本子目录函数
-        $Array  = ['controller','service','library','dao','model'];
+        $Array  = ['controller','service','library','dao','model','validator'];
         $Arrays = [
             'controller'=>'控制器',
             'service'   =>'逻辑层',
             'library'   =>'自定义类',
             'dao'       =>'数据层',
             'model'     =>'模型层',
+            'validator'  =>'验证器',
         ];
 
         // 执行创建子目录
@@ -294,8 +295,14 @@ return [
             $kaifaName,
             "{$notes}{$Arrays[$v]}"
         );
-        $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\{$v};
+        // 判断是不是验证器
+        if($v=='validator'){
+            $str .=  "namespace app\\index\\validate;
 ";
+        }else{
+            $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\{$v};
+";
+        }
         $str .= self::contentCont($moduleName,$i,$v);
 
         return $str;
@@ -327,6 +334,10 @@ return [
         // 模型层内容
         if($v=='model'){
             return self::modelContent($moduleName,$i);
+        }
+        // 验证器内容
+        if($v=='validator'){
+            return self::validateContent($moduleName,$i);
         }
     }
 
@@ -427,6 +438,36 @@ class {$ModuleName}Model extends Model
     {
         ".'$this->table'." = config('v{$i}_tableName.数据表下标');
     }
+}
+";
+    }
+
+    /**
+     * 名 称 : validateContent()
+     * 功 能 : 创建验证器内容
+     * 创 建 : 2018/08/16 11:26
+     */
+    private static function validateContent($moduleName,$i)
+    {
+        // 获取模块名称
+        $ModuleName = ucwords($moduleName);
+        return "use think\\Validate;
+
+class {$ModuleName}Validate extends Validate
+{
+    protected \$rule =   [
+        'name'  => 'require|max:25',
+        'age'   => 'number|between:1,120',
+        'email' => 'email',
+    ];
+
+    protected \$message  =   [
+        'name.require' => '名称必须发送',
+        'name.max'     => '名称最多不能超过25个字符',
+        'age.number'   => '年龄必须是数字',
+        'age.between'  => '年龄只能在1-120之间',
+        'email'        => '邮箱格式错误',
+    ];
 }
 ";
     }

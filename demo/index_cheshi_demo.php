@@ -10,8 +10,8 @@
 include('../library/Module_Create_Library.php');
 
 Module_Create_Library::execCreateModule(
-    'login',
+    'seckill',
     'Shi Guang Yu',
-    '用户登录',
-    '3'
+    '秒杀',
+    '1'
 );
