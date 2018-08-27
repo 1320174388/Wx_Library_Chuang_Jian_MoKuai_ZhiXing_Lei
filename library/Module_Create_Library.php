@@ -371,6 +371,7 @@ class {$ModuleName}Controller extends Controller
         $ModuleName = ucwords($moduleName);
         return "use app\\{$moduleName}_module\\working_version\\v{$i}\dao\\{$ModuleName}Dao;
 use app\\{$moduleName}_module\\working_version\\v{$i}\\library\\{$ModuleName}Library;
+use app\\{$moduleName}_module\\working_version\\v{$i}\\validator\\{$ModuleName}Validate;
 
 class {$ModuleName}Service
 {
