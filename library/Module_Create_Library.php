@@ -120,7 +120,7 @@ class Module_Create_Library
             'library'   =>'自定义类',
             'dao'       =>'数据层',
             'model'     =>'模型层',
-            'validator'  =>'验证器',
+            'validator' =>'验证器',
         ];
 
         // 执行创建子目录
