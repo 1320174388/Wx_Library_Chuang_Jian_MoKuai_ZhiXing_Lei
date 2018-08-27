@@ -296,13 +296,8 @@ return [
             "{$notes}{$Arrays[$v]}"
         );
         // 判断是不是验证器
-        if($v=='validator'){
-            $str .=  "namespace app\\index\\validate;
+        $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\{$v};
 ";
-        }else{
-            $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\{$v};
-";
-        }
         $str .= self::contentCont($moduleName,$i,$v);
 
         return $str;
