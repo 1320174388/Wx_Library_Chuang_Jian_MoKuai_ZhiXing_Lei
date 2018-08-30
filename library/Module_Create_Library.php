@@ -142,7 +142,7 @@ class Module_Create_Library
                 // 创建版本运行内容
                 self::createTouch(
                     $working_version.'/v'.$i.'/'.$v.'/'.
-                    ucwords($moduleName).ucwords($v).'.php',
+                    ucwords($moduleName).ucwords(($v=='validator')?'validate':$v).'.php',
                     self::touchContent($moduleName,$kaifaName,$notes,$Arrays,$v,$i)
                 );
             }
