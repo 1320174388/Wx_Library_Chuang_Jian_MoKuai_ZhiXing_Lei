@@ -115,12 +115,15 @@ class Module_Create_Library
         // 处理版本子目录函数
         $Array  = ['controller','service','library','dao','model','validator'];
         $Arrays = [
-            'controller'=>'控制器',
-            'service'   =>'逻辑层',
-            'library'   =>'自定义类',
-            'dao'       =>'数据层',
-            'model'     =>'模型层',
-            'validator' =>'验证器',
+            'controller'      =>'控制器',
+            'service'         =>'逻辑层',
+            'library'         =>'自定义类',
+            'dao'             =>'数据层',
+            'model'           =>'模型层',
+            'validatePost'   =>'添加验证器',
+            'validateGet'    =>'获取验证器',
+            'validatePut'    =>'修改验证器',
+            'validateDelete' =>'删除验证器',
         ];
 
         // 执行创建子目录
@@ -139,12 +142,28 @@ class Module_Create_Library
                     '运行版本v'.$i.'/'.$v.'目录已存在',
                     '运行版本目录v'.$i.'/'.$v.'创建失败'
                 );
-                // 创建版本运行内容
-                self::createTouch(
-                    $working_version.'/v'.$i.'/'.$v.'/'.
-                    ucwords($moduleName).ucwords(($v=='validator')?'validate':$v).'.php',
-                    self::touchContent($moduleName,$kaifaName,$notes,$Arrays,$v,$i)
-                );
+                if($v=='validator'){
+                    $validatorArray = [
+                        'Post','Get','Put','Delete'
+                    ];
+                    foreach($validatorArray as $value){
+                        // 创建版本运行内容
+                        self::createTouch(
+                            $working_version.'/v'.$i.'/'.$v.'/'.
+                            ucwords($moduleName).'validate'.$value.'.php',
+                            self::touchContent($moduleName,$kaifaName,$notes,$Arrays,
+                                'validate'.$value, $i
+                            )
+                        );
+                    }
+                }else{
+                    // 创建版本运行内容
+                    self::createTouch(
+                        $working_version.'/v'.$i.'/'.$v.'/'.ucwords($moduleName).$v.'.php',
+                        self::touchContent($moduleName,$kaifaName,$notes,$Arrays,$v,$i)
+                    );
+                }
+
             }
             // 创建版本运行内容
             self::createTouch(
@@ -286,6 +305,18 @@ return [
     {
         // 获取模块名称
         $ModuleName = ucwords($moduleName);
+
+        // 验证器内容
+        if(
+            ($v=='validatePost')
+            ||($v=='validateGet')
+            ||($v=='validatePut')
+            ||($v=='validateDelete')
+        ){
+            $v_d = 'validator';
+        }else{
+            $v_d = $v;
+        }
         // 首字母大写
         $U = ucwords($v);
 
@@ -293,10 +324,10 @@ return [
         $str = self::ZS(
             "{$ModuleName}{$U}.php",
             $kaifaName,
-            "{$notes}{$Arrays[$v]}"
+            "{$notes}{$Arrays[$v_d]}"
         );
         // 判断是不是验证器
-        $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\{$v};
+        $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\{$v_d};
 ";
         $str .= self::contentCont($moduleName,$i,$v);
 
@@ -331,8 +362,20 @@ return [
             return self::modelContent($moduleName,$i);
         }
         // 验证器内容
-        if($v=='validator'){
-            return self::validateContent($moduleName,$i);
+        if($v=='validatePost'){
+            return self::validateContent($moduleName,$i,$v);
+        }
+        // 验证器内容
+        if($v=='validateGet'){
+            return self::validateContent($moduleName,$i,$v);
+        }
+        // 验证器内容
+        if($v=='validatePut'){
+            return self::validateContent($moduleName,$i,$v);
+        }
+        // 验证器内容
+        if($v=='validateDelete'){
+            return self::validateContent($moduleName,$i,$v);
         }
     }
 
@@ -366,7 +409,10 @@ class {$ModuleName}Controller extends Controller
         $ModuleName = ucwords($moduleName);
         return "use app\\{$moduleName}_module\\working_version\\v{$i}\dao\\{$ModuleName}Dao;
 use app\\{$moduleName}_module\\working_version\\v{$i}\\library\\{$ModuleName}Library;
-use app\\{$moduleName}_module\\working_version\\v{$i}\\validator\\{$ModuleName}Validate;
+use app\\{$moduleName}_module\\working_version\\v{$i}\\validator\\{$ModuleName}ValidatePost;
+use app\\{$moduleName}_module\\working_version\\v{$i}\\validator\\{$ModuleName}ValidateGet;
+use app\\{$moduleName}_module\\working_version\\v{$i}\\validator\\{$ModuleName}ValidatePut;
+use app\\{$moduleName}_module\\working_version\\v{$i}\\validator\\{$ModuleName}ValidateDelete;
 
 class {$ModuleName}Service
 {
@@ -443,13 +489,13 @@ class {$ModuleName}Model extends Model
      * 功 能 : 创建验证器内容
      * 创 建 : 2018/08/16 11:26
      */
-    private static function validateContent($moduleName,$i)
+    private static function validateContent($moduleName,$i,$v)
     {
         // 获取模块名称
         $ModuleName = ucwords($moduleName);
         return "use think\\Validate;
 
-class {$ModuleName}Validate extends Validate
+class {$ModuleName}{$v} extends Validate
 {
     protected \$rule =   [
         'name'  => 'require|max:25',

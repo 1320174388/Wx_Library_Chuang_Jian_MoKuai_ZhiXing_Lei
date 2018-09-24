@@ -10,8 +10,8 @@
 include('../library/Module_Create_Library.php');
 
 Module_Create_Library::execCreateModule(
-    'order',
+    'right',
     'Shi Guang Yu',
-    '分销订单',
+    '权限管理~管理员管理',
     '1'
 );
