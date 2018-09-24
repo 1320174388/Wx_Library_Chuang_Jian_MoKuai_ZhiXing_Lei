@@ -49,17 +49,152 @@ class Module_Create_Library
      */
     public static function execCreateModule($moduleName,$kaifaName,$notes,$vn)
     {
-        // 1. 设置时间为中国标准时区
-        date_default_timezone_set('PRC');
+        try {
+            // 1. 设置时间为中国标准时区
+            date_default_timezone_set('PRC');
 
-        // 2. MosuleMkdir 执行创建模块目录操作
-        self::CreateMosuleMkdir($moduleName);
+            // 2. MosuleMkdir 执行创建模块目录操作
+            self::CreateMosuleMkdir($moduleName);
 
-        // 3. ConfigMkdir 执行创建配置目录操作
-        self::CreateConfigMkdir($moduleName);
+            // 3. ConfigMkdir 执行创建配置目录操作
+            self::CreateConfigMkdir($moduleName);
 
-        // 4. VersionMkdir 创建模块运行版本目录
-        self::CreateVersionMkdir($moduleName,$kaifaName,$notes,$vn);
+            // 4. VersionMkdir 创建模块运行版本目录
+            self::CreateVersionMkdir($moduleName,$kaifaName,$notes,$vn);
+
+            // 5. installMkdir 创建函数生成类
+            self::installMkdir($moduleName,$vn,$kaifaName,$notes);
+
+            // 6. route 生成路由文件
+            self::routeTouch($moduleName,$vn,$kaifaName,$notes);
+
+            // 7. print_r 打印数据
+            print_r('Module Create Success');
+        } catch (\Exception $e) {
+            // 7. print_r 打印数据
+            print_r('Module Create Error');
+        }
+    }
+
+    /**
+     * 名 称 : routeTouch()
+     * 功 能 : 生成路由文件
+     * 创 建 : 2018/09/24 10:34
+     */
+    private static function routeTouch($moduleName,$vn,$kaifaName,$notes)
+    {
+        // 循环代码
+        for( $i=1; $i<=$vn; $i++ )
+        {
+            // 执行创建目录
+            self::createMkdir(
+                './'.$moduleName.'_module/working_version/v'.$i.'/route',
+                '模块目录已存在，请创建其他模块',
+                '模块目录创建失败'
+            );
+            // 创建文件
+            file_put_contents(
+                './'.$moduleName.'_module/working_version/v'.$i.'/route/'.$moduleName.'_route_v'.$i.'_api.php',
+                self::ZS(
+                    $moduleName.'_route_v'.$i.'_api.php',
+                    $kaifaName,$notes.'路由文件'
+                )
+            );
+        }
+    }
+
+    /**
+     * 名 称 : installMkdir()
+     * 功 能 : 创建函数生成类
+     * 创 建 : 2018/09/24 10:34
+     */
+    private static function installMkdir($moduleName,$vn,$kaifaName,$notes)
+    {
+        // 获取类文件
+        $function = file_get_contents('../library/Function_Create_Library.php');
+        $install  = file_get_contents('../library/install.php');
+
+        // 处理版本路径
+        $working_version = './'.$moduleName.'_module/working_version';
+
+        // 循环代码
+        for( $i=1; $i<=$vn; $i++ )
+        {
+            // 执行创建目录
+            self::createMkdir(
+                './'.$moduleName.'_module/working_version/v'.$i.'/install/default',
+                '模块目录已存在，请创建其他模块',
+                '模块目录创建失败'
+            );
+            // 执行创建目录
+            self::createMkdir(
+                './'.$moduleName.'_module/working_version/v'.$i.'/install/library',
+                '模块目录已存在，请创建其他模块',
+                '模块目录创建失败'
+            );
+            // 创建文件
+            file_put_contents(
+                './'.$moduleName.'_module/working_version/v'.$i.'/install/library/' .
+                'Function_Create_Library.php',
+                preg_replace("/RouteName/", $moduleName,
+                    $function
+                )
+            );
+            file_put_contents(
+                './'.$moduleName.'_module/working_version/v'.$i.'/install/'.
+                'install.php',
+                $install
+            );
+            // 处理版本子目录函数
+            $Array  = ['controller','service','library','dao','model','validator'];
+            $Arrays = [
+                'controller'      =>'控制器',
+                'service'         =>'逻辑层',
+                'library'         =>'自定义类',
+                'dao'             =>'数据层',
+                'model'           =>'模型层',
+                'validatePost'   =>'添加验证器',
+                'validateGet'    =>'获取验证器',
+                'validatePut'    =>'修改验证器',
+                'validateDelete' =>'删除验证器',
+            ];
+            foreach ($Array as $k => $v) {
+                if ($v == 'validator') {
+                    $validatorArray = [
+                        'Post', 'Get', 'Put', 'Delete'
+                    ];
+                    foreach ($validatorArray as $value) {
+                        // 创建版本运行内容
+                        self::createTouch(
+                            $working_version . '/v' . $i . '/install/default/' .
+                            ucwords('ModuleName') . 'Validate' . $value . '.php',
+                            preg_replace("/".ucwords($moduleName)."/", "ModuleName",
+                                self::touchContent($moduleName, $kaifaName, $notes, $Arrays,
+                                    'validate' . $value, $i
+                                )
+                            )
+                        );
+                    }
+                } else {
+                    // 创建版本运行内容
+                    self::createTouch(
+                        $working_version . '/v' . $i . '/install/default/' . ucwords('ModuleName') . ucwords($v) . '.php',
+                        preg_replace("/".ucwords($moduleName)."/", "ModuleName",
+                            self::touchContent($moduleName, $kaifaName, $notes, $Arrays, $v, $i)
+                        )
+                    );
+                    // 创建版本运行内容
+                    self::createTouch(
+                        $working_version.'/v'.$i.'/install/default/'.
+                        ucwords('ModuleName').'Interface.php',
+                        preg_replace("/".ucwords($moduleName)."/", "ModuleName",
+                            self::createInterface($moduleName,$kaifaName,$notes,$i)
+                        )
+
+                    );
+                }
+            }
+        }
     }
 
     /**
@@ -150,7 +285,7 @@ class Module_Create_Library
                         // 创建版本运行内容
                         self::createTouch(
                             $working_version.'/v'.$i.'/'.$v.'/'.
-                            ucwords($moduleName).'validate'.$value.'.php',
+                            ucwords($moduleName).'Validate'.$value.'.php',
                             self::touchContent($moduleName,$kaifaName,$notes,$Arrays,
                                 'validate'.$value, $i
                             )
@@ -159,7 +294,7 @@ class Module_Create_Library
                 }else{
                     // 创建版本运行内容
                     self::createTouch(
-                        $working_version.'/v'.$i.'/'.$v.'/'.ucwords($moduleName).$v.'.php',
+                        $working_version.'/v'.$i.'/'.$v.'/'.ucwords($moduleName).ucwords($v).'.php',
                         self::touchContent($moduleName,$kaifaName,$notes,$Arrays,$v,$i)
                     );
                 }
@@ -234,10 +369,7 @@ class Module_Create_Library
         $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\dao;
 
 interface {$ModuleName}Interface
-{
-
-}
-";
+{}";
         return $str;
     }
 
@@ -324,7 +456,7 @@ return [
         $str = self::ZS(
             "{$ModuleName}{$U}.php",
             $kaifaName,
-            "{$notes}{$Arrays[$v_d]}"
+            "{$notes}{$Arrays[$v]}"
         );
         // 判断是不是验证器
         $str .=  "namespace app\\{$moduleName}_module\\working_version\\v{$i}\\{$v_d};
@@ -392,10 +524,7 @@ return [
 use app\\{$moduleName}_module\\working_version\\v{$i}\\service\\{$ModuleName}Service;
 
 class {$ModuleName}Controller extends Controller
-{
-
-}
-";
+{}";
     }
 
     /**
@@ -415,10 +544,7 @@ use app\\{$moduleName}_module\\working_version\\v{$i}\\validator\\{$ModuleName}V
 use app\\{$moduleName}_module\\working_version\\v{$i}\\validator\\{$ModuleName}ValidateDelete;
 
 class {$ModuleName}Service
-{
-
-}
-";
+{}";
     }
 
     /**
@@ -432,10 +558,7 @@ class {$ModuleName}Service
         $ModuleName = ucwords($moduleName);
         return "
 class {$ModuleName}Library
-{
-
-}
-";
+{}";
     }
 
     /**
@@ -450,10 +573,7 @@ class {$ModuleName}Library
         return "use app\\{$moduleName}_module\\working_version\\v{$i}\model\\{$ModuleName}Model;
 
 class {$ModuleName}Dao implements {$ModuleName}Interface
-{
-
-}
-";
+{}";
     }
 
     /**
@@ -480,8 +600,7 @@ class {$ModuleName}Model extends Model
     {
         ".'$this->table'." = config('v{$i}_tableName.数据表下标');
     }
-}
-";
+}";
     }
 
     /**
@@ -495,23 +614,8 @@ class {$ModuleName}Model extends Model
         $ModuleName = ucwords($moduleName);
         return "use think\\Validate;
 
-class {$ModuleName}{$v} extends Validate
-{
-    protected \$rule =   [
-        'name'  => 'require|max:25',
-        'age'   => 'number|between:1,120',
-        'email' => 'email',
-    ];
-
-    protected \$message  =   [
-        'name.require' => '名称必须发送',
-        'name.max'     => '名称最多不能超过25个字符',
-        'age.number'   => '年龄必须是数字',
-        'age.between'  => '年龄只能在1-120之间',
-        'email'        => '邮箱格式错误',
-    ];
-}
-";
+class {$ModuleName}".ucwords($v)." extends Validate
+{}";
     }
 
     /**
@@ -564,7 +668,6 @@ class {$ModuleName}{$v} extends Validate
  *  历史记录 :  -----------------------
  */
 ";
-
     }
 
 }
