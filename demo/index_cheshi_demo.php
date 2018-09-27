@@ -10,8 +10,8 @@
 include('../library/Module_Create_Library.php');
 
 Module_Create_Library::execCreateModule(
-    'right',
+    'couponlist',
     'Shi Guang Yu',
-    '权限管理',
+    '景区优惠券管理',
     '1'
 );

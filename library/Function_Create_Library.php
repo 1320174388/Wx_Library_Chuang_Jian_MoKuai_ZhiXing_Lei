@@ -289,7 +289,7 @@ Route::{$dataTypeL}(
 }";
         // 判断文件是否存在
         if(file_exists("../library/".ucfirst($FunctionConfig['name'])
-            .'Controller'.".php")){
+            .'Library'.".php")){
             file_put_contents(
                 "../library/".ucfirst($FunctionConfig['name'])
                 .'Library'.".php",
