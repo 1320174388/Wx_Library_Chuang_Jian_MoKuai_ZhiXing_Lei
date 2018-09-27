@@ -13,13 +13,13 @@ Function_Create_Library::execCreateFunction([
     // 传值类型 : (GET/POST/PUT/DELETE)
     'dataType' => 'POST',
     // 函数名称 : 默认 __function
-    'name'     => 'ModuleName',
+    'name'     => 'couponlist',
     // 函数说明 : 默认 新创建函数
-    'explain'  => '添加权限数据',
+    'explain'  => '新创建函数',
     // 函数输入 : 示例 [
-    //  '$get['goodLimit']  => '商品页码';',
+    //  '$post['UserToken']  => '用户标识';',
     //]
     'input'    => [
-        '\'$post[\'rightName\']  => \'权限名称\';\'',
+        '$post[\'UserToken\']  => \'用户标识\';',
     ],
 ]);

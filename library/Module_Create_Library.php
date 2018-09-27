@@ -143,7 +143,9 @@ class Module_Create_Library
             file_put_contents(
                 './'.$moduleName.'_module/working_version/v'.$i.'/install/'.
                 'install.php',
-                $install
+                preg_replace("/ModuleName/", $moduleName,
+                    $install
+                )
             );
             // 处理版本子目录函数
             $Array  = ['controller','service','library','dao','model','validator'];
