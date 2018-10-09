@@ -310,13 +310,13 @@ class Module_Create_Library
             );
             // 创建版本运行配置文件
             self::createTouch(
-                $config_dir.'/v'.$i.'_config.php',
-                self::touchConfig($kaifaName,$notes,$i)
+                $config_dir.'/'.$moduleName.'_v'.$i.'_config.php',
+                self::touchConfig($kaifaName,$notes,$i,$moduleName)
             );
             // 创建版本运行配置文件
             self::createTouch(
-                $config_dir.'/v'.$i.'_tableName.php',
-                self::touchTableName($kaifaName,$notes,$i)
+                $config_dir.'/'.$moduleName.'_v'.$i.'_tableName.php',
+                self::touchTableName($kaifaName,$notes,$i,$moduleName)
             );
             // 创建模块公共函数文件
             self::createTouch(
@@ -383,11 +383,11 @@ interface {$ModuleName}Interface
      * 输 入 : (String) $notes      = '文件描述'
      * 创 建 : 2018/08/16 11:54
      */
-    private static function touchConfig($kaifaName,$notes,$i)
+    private static function touchConfig($kaifaName,$notes,$i,$moduleName)
     {
         // 处理文件内容
         $str = self::ZS(
-            "v{$i}_config.php",
+            "{$moduleName}_v{$i}_config.php",
             $kaifaName,
             "{$notes}_v{$i}_版本配置文件"
         );
@@ -408,11 +408,11 @@ return [
      * 输 入 : (String) $notes      = '文件描述'
      * 创 建 : 2018/08/16 14:09
      */
-    private static function touchTableName($kaifaName,$notes,$i)
+    private static function touchTableName($kaifaName,$notes,$i,$moduleName)
     {
         // 处理文件内容
         $str = self::ZS(
-            "v{$i}_tableName.php",
+            "{$moduleName}_v{$i}_tableName.php",
             $kaifaName,
             "{$notes}_v{$i}_版本数据表配置文件"
         );
@@ -600,7 +600,7 @@ class {$ModuleName}Model extends Model
     // 加载配置数据表名
     protected function initialize()
     {
-        ".'$this->table'." = config('v{$i}_tableName.数据表下标');
+        ".'$this->table'." = config('{$moduleName}_v{$i}_tableName.数据表下标');
     }
 }";
     }
