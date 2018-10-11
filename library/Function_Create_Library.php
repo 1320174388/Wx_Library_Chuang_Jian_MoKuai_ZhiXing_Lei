@@ -581,6 +581,9 @@ Route::{$dataTypeL}(
     public function {$name}(\${$dataType})
     {
         // TODO :  ".ucfirst($FunctionConfig['name'])."Model 模型
+        
+        // 处理函数返回值
+        return \\RSD::wxReponse(true,'M','','');
     }
 }";
         // 判断文件是否存在
