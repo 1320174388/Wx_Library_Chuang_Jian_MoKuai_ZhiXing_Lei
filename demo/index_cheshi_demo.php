@@ -10,8 +10,9 @@
 include('../library/Module_Create_Library.php');
 
 Module_Create_Library::execCreateModule(
-    'wxloginadd',
+    'login',
     'Shi Guang Yu',
-    '添加用户',
+    '18646731096',
+    '用户登录',
     '1'
 );

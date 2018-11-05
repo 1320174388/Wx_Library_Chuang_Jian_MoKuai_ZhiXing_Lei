@@ -19,6 +19,9 @@ class Module_Create_Library
         // 版本声明 : 默认（地老天荒科技有限公司）
         'VersionDeclaration' => '地老天荒科技有限公司',
 
+        // 创建者邮箱
+        'Phone' => '',
+
     );
 
     /**
@@ -47,9 +50,11 @@ class Module_Create_Library
      * 输 入 : (String) $moduleName => '';
      * 创 建 : 2018/08/16 10:29
      */
-    public static function execCreateModule($moduleName,$kaifaName,$notes,$vn)
+    public static function execCreateModule($moduleName,$kaifaName,$phone,$notes,$vn)
     {
         try {
+            // 0. 修改开发者邮箱数据
+            self::$ModuleConfig['Phone'] = $phone;
             // 1. 设置时间为中国标准时区
             date_default_timezone_set('PRC');
 
@@ -660,11 +665,14 @@ class {$ModuleName}".ucwords($v)." extends Validate
         // 获取时间
         $time = date('Y/m/d H:i',time());
 
+        $phone= self::$ModuleConfig['Phone'];
+
         return "<?php
 /**
  *  版权声明 :  {$version}
  *  文件名称 :  {$touchName}
- *  创 建 者 :  {$kaifaName}
+ *  开发人员 :  {$kaifaName}
+ *  联系电话 :  {$phone}
  *  创建日期 :  {$time}
  *  文件描述 :  {$notes}
  *  历史记录 :  -----------------------
