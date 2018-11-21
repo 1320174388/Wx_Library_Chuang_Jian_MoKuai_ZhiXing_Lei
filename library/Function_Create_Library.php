@@ -190,10 +190,8 @@ Route::{$dataTypeL}(
         $dataType = strtolower($FunctionConfig['dataType']);
         // 处理输出
         if($dataType == 'get'){
-            $tishixinxi = '请求成功';
             $output = '{"errNum":0,"retMsg":"请求成功","retData":"请求数据"}';
         }else{
-            $tishixinxi = '';
             $output = '{"errNum":0,"retMsg":"提示信息","retData":true}';
         }
         // 处理名字
@@ -224,7 +222,7 @@ Route::{$dataTypeL}(
         \$res = \$".$FunctionConfig['name'].'Service->'.$FunctionConfig['name'].$names."(\${$dataType});
         
         // 处理函数返回值
-        return \\RSD::wxReponse(\$res,'S','".$tishixinxi."');
+        return \\RSD::wxReponse(\$res,'S');
     }
 }";
         // 判断文件是否存在
@@ -264,9 +262,9 @@ Route::{$dataTypeL}(
         $dataType = strtolower($FunctionConfig['dataType']);
         // 处理输出
         if($dataType == 'get'){
-            $output = "['msg'=>'success','data'=>'返回数据']";
+            $output = "['code'=>'错误码','msg'=>'提示信息','data'=>'返回数据']";
         }else{
-            $output = "['msg'=>'success','data'=>'提示信息']";
+            $output = "['code'=>'错误码','msg'=>'提示信息','data'=>'返回数据']";
         }
         // 处理名字
         $name = $FunctionConfig['name'].'Lib'.ucfirst($dataType);
@@ -284,7 +282,7 @@ Route::{$dataTypeL}(
         // TODO : 执行函数处理逻辑
         
         // TODO : 返回函数输出数据
-        return ['msg'=>'success','data'=>'返回数据'];
+        return \\RSD::returnData('','',false);
     }
 }";
         // 判断文件是否存在
@@ -353,11 +351,11 @@ Route::{$dataTypeL}(
      * 创  建 : ".date('Y/m/d H:i',time())."
      */
     protected \$message  =   [
-        'name.require' => '名称必须',
-        'name.max'     => '名称最多不能超过25个字符',
-        'age.number'   => '年龄必须是数字',
-        'age.between'  => '年龄只能在1-120之间',
-        'email'        => '邮箱格式错误',
+        'name.require' => 'E10000',
+        'name.max'     => 'E10001',
+        'age.number'   => 'E10002',
+        'age.between'  => 'E10001',
+        'email'        => 'E10002',
     ];
 }";
         // 处理数据
@@ -422,9 +420,9 @@ Route::{$dataTypeL}(
         $dataType = strtolower($FunctionConfig['dataType']);
         // 处理输出
         if($dataType == 'get'){
-            $output = "['msg'=>'success','data'=>'返回数据']";
+            $output = "['code'=>'错误码','msg'=>'提示信息','data'=>'返回数据']";
         }else{
-            $output = "['msg'=>'success','data'=>'提示信息']";
+            $output = "['code'=>'错误码','msg'=>'提示信息','data'=>'返回数据']";
         }
         // 处理明细
         if($dataType == 'get')   {$names = 'Show';$namen = 'Select';}
@@ -449,7 +447,7 @@ Route::{$dataTypeL}(
         
         // 验证数据
         if (!\$validate->scene('edit')->check(\${$dataType})) {
-            return ['msg'=>'error','data'=>\$validate->getError()];
+            return \\RSD::returnData(\$validate->getError(),'',false);
         }
         
         // 实例化Dao层数据类
@@ -499,9 +497,9 @@ Route::{$dataTypeL}(
         $dataType = strtolower($FunctionConfig['dataType']);
         // 处理输出
         if($dataType == 'get'){
-            $output = "['msg'=>'success','data'=>'返回数据']";
+            $output = "['code'=>'错误码','msg'=>'提示信息','data'=>'返回数据']";
         }else{
-            $output = "['msg'=>'success','data'=>'提示信息']";
+            $output = "['code'=>'错误码','msg'=>'提示信息','data'=>'返回数据']";
         }
         // 处理明细
         if($dataType == 'get')   {$names = 'Select';}
@@ -558,9 +556,9 @@ Route::{$dataTypeL}(
         $dataType = strtolower($FunctionConfig['dataType']);
         // 处理输出
         if($dataType == 'get'){
-            $output = "['msg'=>'success','data'=>'返回数据']";
+            $output = "['code'=>'错误码','msg'=>'提示信息','data'=>'返回数据']";
         }else{
-            $output = "['msg'=>'success','data'=>'提示信息']";
+            $output = "['code'=>'错误码','msg'=>'提示信息','data'=>'返回数据']";
         }
         // 处理明细
         if($dataType == 'get')   {$names = 'Select';}
@@ -583,7 +581,7 @@ Route::{$dataTypeL}(
         // TODO :  ".ucfirst($FunctionConfig['name'])."Model 模型
         
         // 处理函数返回值
-        return \\RSD::wxReponse(true,'M','','');
+        return \\RSD::returnModel(true,'E40000','请求成功','请求失败');
     }
 }";
         // 判断文件是否存在
