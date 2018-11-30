@@ -10,9 +10,9 @@
 include('../library/Module_Create_Library.php');
 
 Module_Create_Library::execCreateModule(
-    'login',
-    'Shi Guang Yu',
-    '18646731096',
-    '用户登录',
+    'dataobject',
+    'Feng Tian Shui',
+    '15731709183',
+    '数据操作对象',
     '1'
 );
