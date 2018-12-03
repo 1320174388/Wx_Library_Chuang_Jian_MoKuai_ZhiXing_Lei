@@ -190,9 +190,9 @@ Route::{$dataTypeL}(
         $dataType = strtolower($FunctionConfig['dataType']);
         // 处理输出
         if($dataType == 'get'){
-            $output = '{"errNum":0,"retMsg":"请求成功","retData":"请求数据"}';
+            $output = '{"errCode":0,"retMsg":"请求成功","retData":"请求数据"}';
         }else{
-            $output = '{"errNum":0,"retMsg":"提示信息","retData":true}';
+            $output = '{"errCode":0,"retMsg":"提示信息","retData":true}';
         }
         // 处理名字
         $name = $FunctionConfig['name'].ucfirst($dataType);
