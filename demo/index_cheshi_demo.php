@@ -10,9 +10,9 @@
 include('../library/Module_Create_Library.php');
 
 Module_Create_Library::execCreateModule(
-    'dataobject',
-    'Feng Tian Shui',
-    '15731709183',
-    '数据操作对象',
+    'imageobject',
+    'Shi Guang Yu',
+    '18646731096',
+    '图片操作对象',
     '1'
 );
